@@ -1,0 +1,224 @@
+step3.mkdir ---
+step4. cd ----
+step5.mvn archetype:generate -DgroupId=com.example -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+ gedit pom.xml
+
+
+
+4.13.2
+
+<build>
+<plugins>
+
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.8.1</version>
+<configuration>
+<source>21</source>
+<target>21</target>
+</configuration>
+</plugin>
+</plugins>
+</build>
+ save java file
+
+mvn compile   
+mvn test
+mvn package
+
+
+p3
+
+gradle init --type java-application
+build gradel file
+
+task hello {
+    
+        println 'Hello'
+    }
+gradle build
+gradle run
+
+
+p4
+
+create maven project
+mvn archetype:generate -DgroupId=com.example -DartifactId=maven-example -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+open pom.xml file
+
+4.13.2
+
+<build>
+<plugins>
+
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.8.1</version>
+<configuration>
+<source>1.8</source>
+<target>1.8</target>
+</configuration>
+</plugin>
+</plugns>
+</build>
+open app.java save it
+
+gradle init---gradle merger
+
+
+mvn clean install
+mvn exec:java -Dexec.mainClass="com.example.App"
+
+task run(type: JavaExec) {
+    main = 'com.example.App'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+ gradle build
+ gradle run
+
+p5
+
+for jenkins installation ->sudo apt install jenkins
+8.sudo systemctl start jenkins
+9.sudo systemctl enable jenkins
+10.sudo systemctl status jenkins
+11.sudo apt install ufw (ufw-uncomplicated firewall)
+12.sudo ufw allow 8080
+13.sudo ufw enable
+14.sudo ufw reload
+15.sudo ufw status
+16.open browser and enter http://localhost:8080
+17.sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+18.copy paste terminal string characters into browser password field
+
+
+p6
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+            }
+        }
+    }
+}
+
+
+
+p7
+ nano hosts.ini
+localhost ansible_connection=local
+Save the file by pressing Ctrl+O then Enter, and exit with Ctrl+X
+nano setup.yml
+- name: Basic Server Setup
+  hosts: local
+  become: true  # Optional: if your tasks need root access
+  tasks:
+    - name: Example task
+      debug:
+        msg: "Hello, this is a basic setup"
+
+ansible-playbook -i hosts.ini setup.yml
+or
+ansible-playbook -i hosts.ini setup.yml --ask-become-pass
+
+
+p8
+
+mvn archetype:generate -DgroupId=com.example -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd myapp
+add plugins to pom.xml
+
+<build>
+<plugins>
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.8.1</version>
+<configuration>
+<source>11</source>
+<target>11</target>
+</configuration>
+</plugin>
+</plugins>
+</build>
+
+mvn clean install
+mvn exec:java -Dexec.mainClass="com.example.App"
+
+
+
+step2:
+nano hosts.ini
+
+[local]
+localhost ansible_connection=local
+
+nano setup.yml
+ - name: Basic
+   hosts: local
+   become: no
+   tasks:
+     - name: Example
+       debug:
+         msg: "Successful"
+
+ansible-playbook -i hosts.ini setup.yml
+
+
+step3:
+ create GitHub repository as repo name as artifactID "myapp"
+
+git init
+git add .
+git commit -m "my git p8 commit"
+ git branch -M main
+git remote add origin https://github.com/chandra-VM/myapp.git
+git add .
+git push -u origin main
+---->Username for 'https://github.com': chandra-VM
+----->Password for 'https://chandra-VM@github.com':--->go to GitHub settings and  left side menu select developer settings -> personal access tokens->tokens(classic)-->generate new token(classic)--->note ---> give some message -->select scopes of repo---> go down and generate token--->copy the password
+
+step4:
+open localhost:8080 in browser
+username-- admin
+password-->give command like  -->sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+it give password copy and paste the password
+
+after login
+click on new item
+item name as ur artifactID myapp
+and select freestyle project
+after that click on ok
+
+after 
+select source code management-->git
+
+select build steps
+add build steps --->Invoke top-level Maven targets
+			Goals-->clean package
+  add build steps---->Execute shell
+		  Command ---->mvn exec:java -Dexec.mainClass="com.example.App"
+  add build steps---->Execute shell
+		  Command ---->ansible-playbook -i hosts.ini setup.yml
+
+ select Post-build Actions
+     add Post-build Actions ---->Archive the artifacts
+		Files to archive--->target/*.jar
+
+build now
